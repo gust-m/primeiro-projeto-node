@@ -29,7 +29,7 @@ class UpdateUserAvatarService {
 
       if (userAvatarFileExists) {
         await fs.promises.unlink(userAvatarFilePath);
-      }
+      };
     };
 
     user.avatar = avatarFileName;
