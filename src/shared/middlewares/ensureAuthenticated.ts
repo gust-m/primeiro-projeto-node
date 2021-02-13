@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { verify } from 'jsonwebtoken';
 
-import authConfig from '../config/auth';
+import authConfig from '../../config/auth';
 import AppError from '../errors/appError';
 
 interface TokenPayload {
@@ -10,7 +10,11 @@ interface TokenPayload {
   sub: string;
 }
 
-function ensureAuthenticated(request: Request, response: Response, next: NextFunction) {
+function ensureAuthenticated(
+  request: Request,
+  response: Response,
+  next: NextFunction,
+): void {
   const authHeader = request.headers.authorization;
 
   if (!authHeader) {
@@ -19,20 +23,19 @@ function ensureAuthenticated(request: Request, response: Response, next: NextFun
 
   const [, token] = authHeader.split(' ');
 
-  try{
+  try {
     const decoded = verify(token, authConfig.jwt.secret);
 
     const { sub } = decoded as TokenPayload;
 
     request.user = {
       id: sub,
-    }
+    };
 
     return next();
   } catch {
     throw new AppError('Invalid JWT token', 401);
   }
-
 }
 
 export default ensureAuthenticated;

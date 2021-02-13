@@ -1,9 +1,9 @@
-import { getRepository } from 'typeorm';
-import User from '../models/User';
+import { getRepository, Repository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
-import authConfig from '../config/auth';
-import AppError from '../errors/appError';
+import User from '../entities/User';
+import authConfig from '../../../config/auth';
+import AppError from '../../../shared/errors/appError';
 
 interface Request {
   email: string;
@@ -17,10 +17,10 @@ interface Response {
 
 class AuthenticateUserService {
   public async execute({ email, password }: Request): Promise<Response> {
-    const usersRepository = getRepository(User);
+    const usersRepository: Repository<User> = getRepository(User);
 
     const user = await usersRepository.findOne({
-      where: { email }
+      where: { email },
     });
 
     if (!user) {
