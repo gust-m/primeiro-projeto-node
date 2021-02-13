@@ -22,9 +22,16 @@ usersRouter.post('/', async (request, response) => {
     password,
   });
 
-  delete user.password;
+  const userReturn = {
+    avatar: user.avatar,
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    created_at: user.created_at,
+    updated_at: user.updated_at,
+  }
 
-  return response.json(user);
+  return response.json(userReturn);
 })
 
 usersRouter.patch(
