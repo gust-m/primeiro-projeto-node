@@ -7,7 +7,7 @@ import uploadConfig from '@config/upload';
 import AppError from '@shared/errors/appError';
 import IUsersRepository from '../repositories/IUsersRepository';
 
-interface Request {
+interface IRequest {
   user_id: string;
   avatarFileName: string;
 }
@@ -22,7 +22,7 @@ class UpdateUserAvatarService {
   public async execute({
     user_id,
     avatarFileName,
-  }: Request): Promise<Omit<User, 'password'>> {
+  }: IRequest): Promise<Omit<User, 'password'>> {
     const user = await this.usersRepository.findByUserId(user_id);
 
     if (!user) {

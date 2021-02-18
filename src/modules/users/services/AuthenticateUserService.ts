@@ -7,12 +7,12 @@ import authConfig from '@config/auth';
 import AppError from '@shared/errors/appError';
 import IUsersRepository from '../repositories/IUsersRepository';
 
-interface Request {
+interface IRequest {
   email: string;
   password: string;
 }
 
-interface Response {
+interface IResponse {
   user: User;
   token: string;
 }
@@ -24,7 +24,7 @@ class AuthenticateUserService {
     private usersRepository: IUsersRepository,
   ) {}
 
-  public async execute({ email, password }: Request): Promise<Response> {
+  public async execute({ email, password }: IRequest): Promise<IResponse> {
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
