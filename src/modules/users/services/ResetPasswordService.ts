@@ -1,6 +1,10 @@
-import AppError from '@shared/errors/appError';
 import { inject, injectable } from 'tsyringe';
-// import User from '@modules/users/infra/typeorm/entities/User';
+
+import AppError from '@shared/errors/appError';
+
+import { addHours, isAfter } from 'date-fns';
+
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 import IUserTokensRepository from '../repositories/IUserTokensRepository';
 
@@ -14,6 +18,9 @@ class ResetPasswordService {
   constructor(
     @inject('UsersRepository')
     private usersRepository: IUsersRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider,
 
     @inject('UserTokensRepository')
     private userTokensRepository: IUserTokensRepository,
@@ -32,7 +39,14 @@ class ResetPasswordService {
       throw new AppError('User does not exists');
     }
 
-    user.password = password;
+    const tokenCreatedAt = userToken.created_at;
+    const compareDate = addHours(tokenCreatedAt, 2);
+
+    if (isAfter(Date.now(), compareDate)) {
+      throw new AppError('Token expired');
+    }
+
+    user.password = await this.hashProvider.generateHash(password);
 
     await this.usersRepository.save(user);
   }
