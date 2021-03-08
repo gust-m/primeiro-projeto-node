@@ -1,17 +1,24 @@
-import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import AppError from '@shared/errors/appError';
+
+import FakeUsersRepository from '@modules/users/repositories/fakes/FakeUsersRepository';
 import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider';
 import CreateUserService from './CreateUserService';
 
+let fakeUsersRepository: FakeUsersRepository;
+let fakeHashProvider: FakeHashProvider;
+let createUserService: CreateUserService;
+
 describe('CreateUser', () => {
-  it('should be able to create a new user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUserService = new CreateUserService(
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository();
+    fakeHashProvider = new FakeHashProvider();
+    createUserService = new CreateUserService(
       fakeUsersRepository,
       fakeHashProvider,
     );
+  });
 
+  it('should be able to create a new user', async () => {
     const user = await createUserService.execute({
       name: 'Gustavo',
       email: 'gustavo@hotmail.com',
@@ -24,23 +31,19 @@ describe('CreateUser', () => {
 
 describe('CreateUser', () => {
   it('should not be able to create a new users with same email from another', async () => {
-    const fakeUsersRepository = new FakeUsersRepository();
-    const fakeHashProvider = new FakeHashProvider();
-    const createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider,
-    );
-
+    const fakeUsersRep = new FakeUsersRepository();
+    const fakeHashPro = new FakeHashProvider();
+    const createUser = new CreateUserService(fakeUsersRep, fakeHashPro);
     const userEmail = 'gustavo@hotmail.com';
 
-    await createUserService.execute({
+    await createUser.execute({
       name: 'Gustavo',
       email: userEmail,
       password: '123456',
     });
 
     await expect(
-      createUserService.execute({
+      createUser.execute({
         name: 'Gustavo',
         email: userEmail,
         password: '123456',
