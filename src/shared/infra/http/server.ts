@@ -24,13 +24,13 @@ app.use(
     if (err instanceof AppError) {
       return response.status(err.statusCode).json({
         status: 'error',
-        message: err.message,
-        thing: 'apperror',
+        message: err,
+        thing: 'AppError',
       });
     }
     return response.status(500).json({
       status: 'error',
-      message: 'Internal server error',
+      message: err,
       thing: 'ponlyerror',
     });
   },
