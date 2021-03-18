@@ -53,7 +53,9 @@ export class UsersRepository implements IUsersRepository {
   }: IFindAllProvidersDTO): Promise<User[]> {
     if (except_user_id) {
       const users = await this.ormRepository.find({
-        where: Not(except_user_id),
+        where: {
+          id: Not(except_user_id),
+        },
       });
 
       return users;

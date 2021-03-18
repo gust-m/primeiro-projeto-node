@@ -51,12 +51,10 @@ class FakeUsersRepository implements IUsersRepository {
   public async findAllProviders({
     except_user_id,
   }: IFindAllProvidersDTO): Promise<User[]> {
-    const { users } = this;
+    let { users } = this;
 
     if (except_user_id) {
-      const usersFiltered = users.filter(user => user.id !== except_user_id);
-
-      return usersFiltered;
+      users = this.users.filter(user => user.id !== except_user_id);
     }
 
     return users;
