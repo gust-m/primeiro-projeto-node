@@ -4,6 +4,7 @@ import AppError from '@shared/errors/appError';
 import User from '@modules/users/infra/typeorm/entities/User';
 
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
+import { classToClass } from 'class-transformer';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
@@ -67,16 +68,7 @@ class UpdateProfileService {
 
     await this.usersRepository.save(user);
 
-    const userReturn = {
-      id: user_id,
-      name,
-      email,
-      avatar: user.avatar,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
-
-    return userReturn;
+    return classToClass(user);
   }
 }
 

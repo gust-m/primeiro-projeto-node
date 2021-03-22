@@ -3,6 +3,7 @@ import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/errors/appError';
 import ICreateUSerDTO from '@modules/users/dtos/ICreateUserDTO';
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
+import { classToClass } from 'class-transformer';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 @injectable()
@@ -34,7 +35,7 @@ class CreateUserService {
       password: hashedPassword,
     });
 
-    return user;
+    return classToClass(user);
   }
 }
 

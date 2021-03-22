@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/errors/appError';
 import IStorageProvider from '@shared/container/providers/StorageProvider/models/IStorageProvider';
+import { classToClass } from 'class-transformer';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 interface IRequest {
@@ -37,18 +38,9 @@ class UpdateUserAvatarService {
 
     user.avatar = filename;
 
-    const userReturn = {
-      avatar: user.avatar,
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      created_at: user.created_at,
-      updated_at: user.updated_at,
-    };
-
     await this.usersRepository.save(user);
 
-    return userReturn;
+    return classToClass(user);
   }
 }
 
