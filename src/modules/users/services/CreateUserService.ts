@@ -1,9 +1,12 @@
 import { inject, injectable } from 'tsyringe';
-import User from '@modules/users/infra/typeorm/entities/User';
 import AppError from '@shared/errors/appError';
+import { classToClass } from 'class-transformer';
+
+import User from '@modules/users/infra/typeorm/entities/User';
+
 import ICreateUSerDTO from '@modules/users/dtos/ICreateUserDTO';
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider';
-import { classToClass } from 'class-transformer';
+import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
 import IUsersRepository from '../repositories/IUsersRepository';
 
 @injectable()
@@ -14,6 +17,9 @@ class CreateUserService {
 
     @inject('HashProvider')
     private hashProvider: IHashProvider,
+
+    @inject('CacheProvider')
+    private cacheProvider: ICacheProvider,
   ) {}
 
   public async execute({
@@ -34,6 +40,8 @@ class CreateUserService {
       email,
       password: hashedPassword,
     });
+
+    await this.cacheProvider.invalidatePrefix('providers-list');
 
     return classToClass(user);
   }

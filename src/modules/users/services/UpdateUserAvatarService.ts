@@ -20,10 +20,7 @@ class UpdateUserAvatarService {
     private storageProvider: IStorageProvider,
   ) {}
 
-  public async execute({
-    user_id,
-    avatarFileName,
-  }: IRequest): Promise<Omit<User, 'password'>> {
+  public async execute({ user_id, avatarFileName }: IRequest): Promise<User> {
     const user = await this.usersRepository.findByUserId(user_id);
 
     if (!user) {
