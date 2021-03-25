@@ -21,7 +21,7 @@ export default class RedisCacheProvider implements ICacheProvider {
       return null;
     }
 
-    return JSON.parse(data);
+    return JSON.parse(data) as T;
   }
 
   public async invalidate(key: string): Promise<void> {
