@@ -2,6 +2,7 @@ import { inject, injectable } from 'tsyringe';
 
 import Appointment from '@modules/appointments/infra/typeorm/entities/Appointment';
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 import IAppointmentRepository from '../repositories/IAppointmentsRepository';
 
 interface IRequest {
@@ -41,10 +42,9 @@ class ListProviderAppointmentsService {
         },
       );
 
-      console.log('The query in the database has been done');
       await this.cacheProvider.save(
         `provider-appointments:${provider_id}:${year}-${month}-${day}`,
-        appointments,
+        classToClass(appointments),
       );
     }
 
